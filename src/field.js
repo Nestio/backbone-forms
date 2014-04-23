@@ -108,6 +108,9 @@ Form.Field = Backbone.View.extend({
     //Add spaces
     str = str.replace(/([A-Z])/g, ' $1');
 
+    //Convert underscore to space
+    str = str.replace('_',' ');
+
     //Uppercase first character
     str = str.replace(/^./, function(str) { return str.toUpperCase(); });
 
@@ -164,6 +167,11 @@ Form.Field = Backbone.View.extend({
     });
 
     this.setElement($field);
+
+    // Unwrap <span data-editor> editor wrapper if inputGroup template
+    if (Backbone.Form.Field.templates && this.schema.template === Backbone.Form.Field.templates.inputGroup) {
+        this.$('[data-editor]').contents().unwrap();
+    }
 
     return this;
   },

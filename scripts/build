@@ -44,6 +44,7 @@ builder(baseDir)
   .setContent(mainContents)
   .wrap('scripts/build-templates/main.js', templateData)
   .save('distribution/backbone-forms.js')
+  .save('../chuck/static/lib/backbone-forms/backbone-forms.js')
   .uglify()
   .save('distribution/backbone-forms.min.js')
   .save('../chuck/static/lib/backbone-forms/backbone-forms.min.js');
@@ -53,7 +54,6 @@ builder(baseDir)
   .setContent(mainContents)
   .wrap('scripts/build-templates/main.amd.js', templateData)
   .save('distribution.amd/backbone-forms.js')
-  .save('../chuck/static/lib/backbone-forms/backbone-forms.js')
   .uglify()
   .save('distribution.amd/backbone-forms.min.js');
 
