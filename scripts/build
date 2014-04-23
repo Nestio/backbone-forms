@@ -45,13 +45,15 @@ builder(baseDir)
   .wrap('scripts/build-templates/main.js', templateData)
   .save('distribution/backbone-forms.js')
   .uglify()
-  .save('distribution/backbone-forms.min.js');
+  .save('distribution/backbone-forms.min.js')
+  .save('../chuck/static/lib/backbone-forms/backbone-forms.min.js');
 
 //Main AMD file (for RequireJS)
 builder(baseDir)
   .setContent(mainContents)
   .wrap('scripts/build-templates/main.amd.js', templateData)
   .save('distribution.amd/backbone-forms.js')
+  .save('../chuck/static/lib/backbone-forms/backbone-forms.js')
   .uglify()
   .save('distribution.amd/backbone-forms.min.js');
 
@@ -62,8 +64,10 @@ builder(baseDir)
   builder(baseDir)
     .load('src/editors/extra/'+name+'.js')
     .save('distribution/editors/'+name+'.js')
+    .save('../chuck/static/lib/backbone-forms/editors/'+name+'.js')
     .uglify()
-    .save('distribution/editors/'+name+'.min.js');
+    .save('distribution/editors/'+name+'.min.js')
+    .save('../chuck/static/lib/backbone-forms/editors/'+name+'.min.js');
 
   //CSS file
   if (path.existsSync(baseDir + '/src/editors/'+name+'.css')) {
@@ -89,7 +93,8 @@ builder(baseDir)
   builder(baseDir)
     .load('src/templates/'+name+'.js')
     .wrap('scripts/build-templates/standalone-template.js')
-    .save('distribution/templates/'+name+'.js');
+    .save('distribution/templates/'+name+'.js')
+    .save('../chuck/static/lib/backbone-forms/templates/'+name+'.js');
 
   //HTML (AMD)
   builder(baseDir)
@@ -101,6 +106,7 @@ builder(baseDir)
   builder(baseDir)
     .load('src/templates/'+name+'.css')
     .save('distribution/templates/'+name+'.css')
+    .save('../chuck/static/lib/backbone-forms/templates/'+name+'.css')
     .save('distribution.amd/templates/'+name+'.css');
 });
 
@@ -109,5 +115,7 @@ builder(baseDir)
 builder(baseDir)
   .load('lib/backbone.bootstrap-modal/src/backbone.bootstrap-modal.js')
   .save('distribution/adapters/backbone.bootstrap-modal.js')
+  .save('../chuck/static/lib/backbone-forms/adapters/backbone.bootstrap-modal.js')
   .uglify()
-  .save('distribution/adapters/backbone.bootstrap-modal.min.js');
+  .save('distribution/adapters/backbone.bootstrap-modal.min.js')
+  .save('../chuck/static/lib/backbone-forms/adapters/backbone.bootstrap-modal.min.js');
