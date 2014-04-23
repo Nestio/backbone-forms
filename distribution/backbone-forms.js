@@ -79,8 +79,14 @@ var Form = Backbone.View.extend({
     this.Field = options.Field || this.Field || constructor.Field;
     this.NestedField = options.NestedField || this.NestedField || constructor.NestedField;
 
+    //If defining fieldsets, check which fields will be included
+    var fieldsetFields = null;
+    if (options.fieldsets) {
+      fieldsetFields = _.flatten(_.pluck(options.fieldsets, 'fields'));
+    }
+
     //Check which fields will be included (defaults to all)
-    var selectedFields = this.selectedFields = options.fields || _.keys(schema);
+    var selectedFields = this.selectedFields = fieldsetFields || options.fields || _.keys(schema);
 
     //Create fields
     var fields = this.fields = {};
@@ -97,6 +103,7 @@ var Form = Backbone.View.extend({
     _.each(fieldsetSchema, function(itemSchema) {
       this.fieldsets.push(this.createFieldset(itemSchema));
     }, this);
+    
   },
 
   /**
