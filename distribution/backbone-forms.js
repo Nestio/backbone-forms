@@ -848,7 +848,7 @@ Form.Field = Backbone.View.extend({
     str = str.replace(/([A-Z])/g, ' $1');
 
     //Convert underscore to space
-    str = str.replace('_',' ');
+    str = str.replace(/_/g,' ');
 
     //Uppercase first character
     str = str.replace(/^./, function(str) { return str.toUpperCase(); });
