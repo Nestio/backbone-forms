@@ -90,6 +90,11 @@ Form.Field = Backbone.View.extend({
     if (_.isString(prefix) || _.isNumber(prefix)) return prefix + id;
     if (_.isNull(prefix)) return id;
 
+    //Default to 'id_' prefix
+    return 'id_' + id;
+
+    //TODO: add a flag to use model.cid if desired?
+
     //Otherwise, if there is a model use it's CID to avoid conflicts when multiple forms are on the page
     if (this.model) return this.model.cid + '_' + id;
 

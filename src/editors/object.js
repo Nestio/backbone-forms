@@ -32,7 +32,7 @@ Form.editors.Object = Form.editors.Base.extend({
     this.nestedForm = new NestedForm({
       schema: this.schema.subSchema,
       data: this.value,
-      idPrefix: this.id + '_',
+      idPrefix: 'id_',
       Field: NestedForm.NestedField
     });
 
