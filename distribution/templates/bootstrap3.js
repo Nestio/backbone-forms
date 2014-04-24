@@ -34,17 +34,15 @@
 
   Form.Field.template = _.template('\
     <div class="form-group <%= key %>-field">\
-      <label class="control-label" for="<%= editorId %>"><%= title %></label>\
-      <div>\
-        <span data-editor></span>\
-        <p class="help-block" data-error></p>\
-        <p class="help-block"><%= help %></p>\
-      </div>\
+      <label for="<%= editorId %>"><%= title %></label>\
+      <span data-editor></span>\
+      <p class="help-block" data-error></p>\
+      <p class="help-block"><%= help %></p>\
     </div>\
   ');
 
   Form.Field.templateCheckbox = _.template('\
-    <div class="checkbox {{key}}-field">\
+    <div class="checkbox <%= key %>-field">\
       <label>\
         <span data-editor></span>\
         <%= title %>\
@@ -55,11 +53,10 @@
 
 
   Form.NestedField.template = _.template('\
-    <div class="<%= key %>-field">\
-      <div title="<%= title %>" class="input-xlarge">\
-        <span data-editor></span>\
-        <div class="help-inline" data-error></div>\
-      </div>\
+    <div class="form-group <%= key %>-field">\
+      <label for="<%= editorId %>"><%= title %></label>\
+      <span data-editor></span>\
+      <div class="help-inline" data-error></div>\
       <div class="help-block"><%= help %></div>\
     </div>\
   ');

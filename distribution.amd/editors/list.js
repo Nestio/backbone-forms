@@ -39,11 +39,13 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
         //Default to Text
         if (!type) return editors.Text;
 
-        //Use List-specific version if available
-        if (editors.List[type]) return editors.List[type];
+        if (options.useListEditors) {
+          //Use List-specific version if available
+          if (editors.List[type]) return editors.List[type];
+        }
 
         //Or whichever was passed
-        return editors[type];
+        return editors[type];   
       })();
 
       this.items = [];
@@ -297,7 +299,7 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
 
     render: function() {
       var $ = Backbone.$;
-      
+
       //Create editor
       this.editor = new this.Editor({
         key: this.key,
