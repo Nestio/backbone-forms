@@ -81,7 +81,24 @@ var Form = Backbone.View.extend({
     var fields = this.fields = {};
 
     _.each(selectedFields, function(key) {
-      var fieldSchema = schema[key];
+      var fieldSchema;
+      if (schema[key]) {
+        // Get the schema of the field
+        fieldSchema = schema[key];
+      }
+      else {
+        // Nested/Object field. Get a nested field schema
+        var nestedKey = key.split('.')[0];
+        var pathFields = key.replace(/\./g, '.subSchema.').split('.');
+
+        var result = schema[nestedKey];
+        // Iterate through the path and get the last field, set the field schema.
+        _.each(_.rest(pathFields), function(field){
+          result = result[field];
+        });
+
+        fieldSchema = result;
+      }
       fields[key] = this.createField(key, fieldSchema);
     }, this);
 
@@ -335,7 +352,27 @@ var Form = Backbone.View.extend({
       }
     }, options);
 
-    this.model.set(this.getValue(), setOptions);
+
+    var values = this.getValue();
+    var modelValues = {};
+    for(var key in values) {
+      if(values.hasOwnProperty(key)) {
+        if(key.indexOf('.') != -1) {
+          var chunks = key.split('.');
+          if( ! modelValues[chunks[0]]) {
+            modelValues[chunks[0]] = this.model.get(chunks[0]) || {};
+          }
+          modelValues[chunks[0]][chunks[1]] = values[key];
+        } else {
+            modelValues[key] = values[key];
+        }
+      }
+    }
+
+
+    // this.model.set(this.getValue(), setOptions);
+    this.model.set(modelValues, setOptions);
+
     
     if (modelError) return modelError;
   },
@@ -813,10 +850,7 @@ Form.Field = Backbone.View.extend({
     if (_.isString(prefix) || _.isNumber(prefix)) return prefix + id;
     if (_.isNull(prefix)) return id;
 
-    //Default to 'id_' prefix
-    return 'id_' + id;
-
-    //TODO: add a flag to use model.cid if desired?
+    if (this.model) console.log(this.model.cid);
 
     //Otherwise, if there is a model use it's CID to avoid conflicts when multiple forms are on the page
     if (this.model) return this.model.cid + '_' + id;
@@ -833,10 +867,13 @@ Form.Field = Backbone.View.extend({
   createTitle: function() {
     var str = this.key;
 
-    //Add spaces
+    // Get field name from possible Deep Models
+    str = _.last(str.split('.'));
+
+    //Add spaces for camelCase
     str = str.replace(/([A-Z])/g, ' $1');
 
-    //Convert underscore to space
+    //Convert underscores to space
     str = str.replace(/_/g,' ');
 
     //Uppercase first character
@@ -858,7 +895,7 @@ Form.Field = Backbone.View.extend({
       title: schema.title,
       fieldAttrs: schema.fieldAttrs,
       editorAttrs: schema.editorAttrs,
-      key: this.key,
+      key: this.key.replace(/\./g, '_'),
       editorId: this.editor.id
     };
   },
@@ -1065,7 +1102,16 @@ Form.Editor = Form.editors.Base = Backbone.View.extend({
 
       this.model = options.model;
 
-      this.value = this.model.get(options.key);
+      // this.value = this.model.get(options.key);
+      if(options.key.indexOf('.') != -1) {
+        var keys = options.key.split('.');
+        var obj = this.model.get(keys[0]);
+        this.value = obj[keys[1]];
+      } else {
+        this.value = this.model.get(options.key);
+      }
+
+
     }
     else if (options.value !== undefined) {
       this.value = options.value;
@@ -1995,11 +2041,15 @@ Form.editors.Object = Form.editors.Base.extend({
     //Get the constructor for creating the nested form; i.e. the same constructor as used by the parent form
     var NestedForm = this.form.constructor;
 
+    // if (_.isUndefined(this.id)) {
+    //   this.id = 'id_' + (_.isNull(this.value.id) || _.isUndefined(this.value.id) ? _.uniqueId('new') : this.value.id);
+    // }
+
     //Create the nested form
     this.nestedForm = new NestedForm({
       schema: this.schema.subSchema,
       data: this.value,
-      idPrefix: 'id_',
+      idPrefix: this.id + '_',
       Field: NestedForm.NestedField
     });
 
@@ -2090,7 +2140,7 @@ Form.editors.NestedModel = Form.editors.Object.extend({
 
     this.nestedForm = new NestedForm({
       model: modelInstance,
-      idPrefix: 'id_',
+      idPrefix: this.id + '_',
       fieldTemplate: 'nestedField'
     });
 

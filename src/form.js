@@ -67,7 +67,24 @@ var Form = Backbone.View.extend({
     var fields = this.fields = {};
 
     _.each(selectedFields, function(key) {
-      var fieldSchema = schema[key];
+      var fieldSchema;
+      if (schema[key]) {
+        // Get the schema of the field
+        fieldSchema = schema[key];
+      }
+      else {
+        // Nested/Object field. Get a nested field schema
+        var nestedKey = key.split('.')[0];
+        var pathFields = key.replace(/\./g, '.subSchema.').split('.');
+
+        var result = schema[nestedKey];
+        // Iterate through the path and get the last field, set the field schema.
+        _.each(_.rest(pathFields), function(field){
+          result = result[field];
+        });
+
+        fieldSchema = result;
+      }
       fields[key] = this.createField(key, fieldSchema);
     }, this);
 
@@ -321,7 +338,27 @@ var Form = Backbone.View.extend({
       }
     }, options);
 
-    this.model.set(this.getValue(), setOptions);
+
+    var values = this.getValue();
+    var modelValues = {};
+    for(var key in values) {
+      if(values.hasOwnProperty(key)) {
+        if(key.indexOf('.') != -1) {
+          var chunks = key.split('.');
+          if( ! modelValues[chunks[0]]) {
+            modelValues[chunks[0]] = this.model.get(chunks[0]) || {};
+          }
+          modelValues[chunks[0]][chunks[1]] = values[key];
+        } else {
+            modelValues[key] = values[key];
+        }
+      }
+    }
+
+
+    // this.model.set(this.getValue(), setOptions);
+    this.model.set(modelValues, setOptions);
+
     
     if (modelError) return modelError;
   },

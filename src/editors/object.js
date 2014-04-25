@@ -28,11 +28,15 @@ Form.editors.Object = Form.editors.Base.extend({
     //Get the constructor for creating the nested form; i.e. the same constructor as used by the parent form
     var NestedForm = this.form.constructor;
 
+    // if (_.isUndefined(this.id)) {
+    //   this.id = 'id_' + (_.isNull(this.value.id) || _.isUndefined(this.value.id) ? _.uniqueId('new') : this.value.id);
+    // }
+
     //Create the nested form
     this.nestedForm = new NestedForm({
       schema: this.schema.subSchema,
       data: this.value,
-      idPrefix: 'id_',
+      idPrefix: this.id + '_',
       Field: NestedForm.NestedField
     });
 

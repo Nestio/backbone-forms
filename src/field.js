@@ -90,10 +90,7 @@ Form.Field = Backbone.View.extend({
     if (_.isString(prefix) || _.isNumber(prefix)) return prefix + id;
     if (_.isNull(prefix)) return id;
 
-    //Default to 'id_' prefix
-    return 'id_' + id;
-
-    //TODO: add a flag to use model.cid if desired?
+    if (this.model) console.log(this.model.cid);
 
     //Otherwise, if there is a model use it's CID to avoid conflicts when multiple forms are on the page
     if (this.model) return this.model.cid + '_' + id;
@@ -110,10 +107,13 @@ Form.Field = Backbone.View.extend({
   createTitle: function() {
     var str = this.key;
 
-    //Add spaces
+    // Get field name from possible Deep Models
+    str = _.last(str.split('.'));
+
+    //Add spaces for camelCase
     str = str.replace(/([A-Z])/g, ' $1');
 
-    //Convert underscore to space
+    //Convert underscores to space
     str = str.replace(/_/g,' ');
 
     //Uppercase first character
@@ -135,7 +135,7 @@ Form.Field = Backbone.View.extend({
       title: schema.title,
       fieldAttrs: schema.fieldAttrs,
       editorAttrs: schema.editorAttrs,
-      key: this.key,
+      key: this.key.replace(/\./g, '_'),
       editorId: this.editor.id
     };
   },

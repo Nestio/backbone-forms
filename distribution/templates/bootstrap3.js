@@ -74,7 +74,7 @@
     Form.editors.List.template = _.template('\
       <div class="bbf-list">\
         <ul class="list-unstyled clearfix" data-items></ul>\
-        <a type="button" class="btn btn-link bbf-add" data-action="add">Add</a>\
+        <a class="btn btn-link bbf-add" data-action="add">Add</a>\
       </div>\
     ');
 
@@ -82,7 +82,7 @@
     Form.editors.List.Item.template = _.template('\
       <li>\
         <div class="pull-left" data-editor></div>\
-        <a type="button" class="btn btn-link bbf-del" data-action="remove">&times;</a>\
+        <a class="btn btn-link bbf-del" data-action="remove">&times;</a>\
       </li>\
     ');
     
