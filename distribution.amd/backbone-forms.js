@@ -850,8 +850,6 @@ Form.Field = Backbone.View.extend({
     if (_.isString(prefix) || _.isNumber(prefix)) return prefix + id;
     if (_.isNull(prefix)) return id;
 
-    if (this.model) console.log(this.model.cid);
-
     //Otherwise, if there is a model use it's CID to avoid conflicts when multiple forms are on the page
     if (this.model) return this.model.cid + '_' + id;
 
@@ -2040,10 +2038,6 @@ Form.editors.Object = Form.editors.Base.extend({
   render: function() {
     //Get the constructor for creating the nested form; i.e. the same constructor as used by the parent form
     var NestedForm = this.form.constructor;
-
-    // if (_.isUndefined(this.id)) {
-    //   this.id = 'id_' + (_.isNull(this.value.id) || _.isUndefined(this.value.id) ? _.uniqueId('new') : this.value.id);
-    // }
 
     //Create the nested form
     this.nestedForm = new NestedForm({

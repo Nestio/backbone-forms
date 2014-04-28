@@ -37,7 +37,6 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
     <div class="form-group <%= key %>-field">\
       <label for="<%= editorId %>"><%= title %></label>\
       <span data-editor></span>\
-      <p class="help-block" data-error></p>\
       <p class="help-block"><%= help %></p>\
     </div>\
   ');
@@ -57,7 +56,6 @@ define(['jquery', 'underscore', 'backbone', 'backbone-forms'], function($, _, Ba
     <div class="form-group <%= key %>-field">\
       <label for="<%= editorId %>"><%= title %></label>\
       <span data-editor></span>\
-      <div class="help-inline" data-error></div>\
       <div class="help-block"><%= help %></div>\
     </div>\
   ');
