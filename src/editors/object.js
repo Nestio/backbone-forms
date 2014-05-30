@@ -15,6 +15,7 @@ Form.editors.Object = Form.editors.Base.extend({
   initialize: function(options) {
     //Set default value for the instance so it's not a shared object
     this.value = {};
+    this.hasNestedForm = true;
 
     //Init
     Form.editors.Base.prototype.initialize.call(this, options);
@@ -27,6 +28,8 @@ Form.editors.Object = Form.editors.Base.extend({
   render: function() {
     //Get the constructor for creating the nested form; i.e. the same constructor as used by the parent form
     var NestedForm = this.form.constructor;
+
+    NestedForm.NestedField.prototype.constructor.errorClassName = Form.Field.errorClassName;
 
     //Create the nested form
     this.nestedForm = new NestedForm({

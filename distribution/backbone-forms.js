@@ -980,6 +980,10 @@ Form.Field = Backbone.View.extend({
     this.$el.addClass(this.errorClassName);
 
     //Set error message
+    this.setErrorMessage(msg);
+  },
+
+  setErrorMessage: function(msg) {
     this.$('[data-error]').html(msg);
   },
 
@@ -991,6 +995,10 @@ Form.Field = Backbone.View.extend({
     this.$el.removeClass(this.errorClassName);
 
     //Clear error message
+    this.clearErrorMessage();
+  },
+
+  clearErrorMessage: function(){
     this.$('[data-error]').empty();
   },
 
@@ -1111,11 +1119,10 @@ Form.Editor = Form.editors.Base = Backbone.View.extend({
 
       this.model = options.model;
 
-      // this.value = this.model.get(options.key);
-      if(options.key.indexOf('.') != -1) {
+      if (options.key.indexOf('.') != -1) {
         var keys = options.key.split('.');
         var obj = this.model.get(keys[0]);
-        this.value = obj[keys[1]];
+        this.value = obj ? obj[keys[1]] : null;
       } else {
         this.value = this.model.get(options.key);
       }
@@ -2037,6 +2044,7 @@ Form.editors.Object = Form.editors.Base.extend({
   initialize: function(options) {
     //Set default value for the instance so it's not a shared object
     this.value = {};
+    this.hasNestedForm = true;
 
     //Init
     Form.editors.Base.prototype.initialize.call(this, options);
@@ -2049,6 +2057,8 @@ Form.editors.Object = Form.editors.Base.extend({
   render: function() {
     //Get the constructor for creating the nested form; i.e. the same constructor as used by the parent form
     var NestedForm = this.form.constructor;
+
+    NestedForm.NestedField.prototype.constructor.errorClassName = Form.Field.errorClassName;
 
     //Create the nested form
     this.nestedForm = new NestedForm({

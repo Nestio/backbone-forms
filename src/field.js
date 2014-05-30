@@ -209,6 +209,10 @@ Form.Field = Backbone.View.extend({
     this.$el.addClass(this.errorClassName);
 
     //Set error message
+    this.setErrorMessage(msg);
+  },
+
+  setErrorMessage: function(msg) {
     this.$('[data-error]').html(msg);
   },
 
@@ -220,6 +224,10 @@ Form.Field = Backbone.View.extend({
     this.$el.removeClass(this.errorClassName);
 
     //Clear error message
+    this.clearErrorMessage();
+  },
+
+  clearErrorMessage: function(){
     this.$('[data-error]').empty();
   },
 

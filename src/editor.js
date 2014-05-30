@@ -25,11 +25,10 @@ Form.Editor = Form.editors.Base = Backbone.View.extend({
 
       this.model = options.model;
 
-      // this.value = this.model.get(options.key);
-      if(options.key.indexOf('.') != -1) {
+      if (options.key.indexOf('.') != -1) {
         var keys = options.key.split('.');
         var obj = this.model.get(keys[0]);
-        this.value = obj[keys[1]];
+        this.value = obj ? obj[keys[1]] : null;
       } else {
         this.value = this.model.get(options.key);
       }
